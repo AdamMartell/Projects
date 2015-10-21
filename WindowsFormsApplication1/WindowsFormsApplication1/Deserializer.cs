@@ -8,12 +8,25 @@ namespace WindowsFormsApplication1
 {
     class Deserializer
     {
-        public static void GetData(string data)
+        
+        public static void GetData(byte[] data)
         {
-            Form1 test = new Form1();
-            if (data.StartsWith("%"))
+            Player attacker;
+            Player defender;
+            double sentinel =  data[0];
+            if(data[3] == 1)
             {
-                Action.FireMissile(Convert.ToDouble(data.Substring(1, 6)), Convert.ToDouble(data.Substring(6, 6)), test.player1, test.player2, test);
+                attacker = GameLogic.player1;
+                defender = GameLogic.player2;
+            }
+            else
+            {
+                attacker = GameLogic.player2;
+                defender = GameLogic.player1;
+            }
+            if (sentinel == 1)
+            {
+                Action.FireMissile(data[1], data[2], attacker, defender);
             }
         }
     }

@@ -33,11 +33,12 @@ namespace WindowsFormsApplication1
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.missile = new System.Windows.Forms.PictureBox();
             this.FireButton = new System.Windows.Forms.Button();
-            this.PowerBar = new System.Windows.Forms.TrackBar();
-            this.PowerBarDisplay = new System.Windows.Forms.RichTextBox();
+            PowerBar = new System.Windows.Forms.TrackBar();
+            PowerBarDisplay = new System.Windows.Forms.RichTextBox();
             playGround = new System.Windows.Forms.Panel();
             WinBox = new System.Windows.Forms.RichTextBox();
             this.Player2ScoreBox = new System.Windows.Forms.RichTextBox();
@@ -45,14 +46,15 @@ namespace WindowsFormsApplication1
             this.MoveRightButton = new System.Windows.Forms.Button();
             this.MoveLeftButton = new System.Windows.Forms.Button();
             this.Angle = new System.Windows.Forms.RichTextBox();
-            this.AngleBar = new System.Windows.Forms.TrackBar();
+            AngleBar = new System.Windows.Forms.TrackBar();
             this.missile2 = new System.Windows.Forms.PictureBox();
             this.Tank2 = new System.Windows.Forms.PictureBox();
             this.Tank1 = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.missile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PowerBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(PowerBar)).BeginInit();
             playGround.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AngleBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(AngleBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.missile2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tank2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tank1)).BeginInit();
@@ -68,7 +70,6 @@ namespace WindowsFormsApplication1
             this.missile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.missile.TabIndex = 3;
             this.missile.TabStop = false;
-            this.missile.Visible = false;
             // 
             // FireButton
             // 
@@ -82,25 +83,25 @@ namespace WindowsFormsApplication1
             // 
             // PowerBar
             // 
-            this.PowerBar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.PowerBar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.PowerBar.Location = new System.Drawing.Point(114, 593);
-            this.PowerBar.Margin = new System.Windows.Forms.Padding(0);
-            this.PowerBar.Maximum = 100;
-            this.PowerBar.Name = "PowerBar";
-            this.PowerBar.Size = new System.Drawing.Size(325, 45);
-            this.PowerBar.TabIndex = 4;
-            this.PowerBar.Tag = "Power Bar";
-            this.PowerBar.Scroll += new System.EventHandler(this.PowerBar_Scroll);
+            PowerBar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            PowerBar.Cursor = System.Windows.Forms.Cursors.Hand;
+            PowerBar.Location = new System.Drawing.Point(114, 593);
+            PowerBar.Margin = new System.Windows.Forms.Padding(0);
+            PowerBar.Maximum = 100;
+            PowerBar.Name = "PowerBar";
+            PowerBar.Size = new System.Drawing.Size(325, 45);
+            PowerBar.TabIndex = 4;
+            PowerBar.Tag = "Power Bar";
+            PowerBar.Scroll += new System.EventHandler(PowerBar_Scroll);
             // 
             // PowerBarDisplay
             // 
-            this.PowerBarDisplay.Font = new System.Drawing.Font("Impact", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerBarDisplay.Location = new System.Drawing.Point(445, 593);
-            this.PowerBarDisplay.Name = "PowerBarDisplay";
-            this.PowerBarDisplay.Size = new System.Drawing.Size(100, 45);
-            this.PowerBarDisplay.TabIndex = 5;
-            this.PowerBarDisplay.Text = "";
+            PowerBarDisplay.Font = new System.Drawing.Font("Impact", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            PowerBarDisplay.Location = new System.Drawing.Point(445, 593);
+            PowerBarDisplay.Name = "PowerBarDisplay";
+            PowerBarDisplay.Size = new System.Drawing.Size(100, 45);
+            PowerBarDisplay.TabIndex = 5;
+            PowerBarDisplay.Text = "";
             // 
             // playGround
             // 
@@ -115,7 +116,7 @@ namespace WindowsFormsApplication1
             playGround.Controls.Add(this.MoveLeftButton);
             playGround.Controls.Add(this.FireButton);
             playGround.Controls.Add(this.Angle);
-            playGround.Controls.Add(this.AngleBar);
+            playGround.Controls.Add(AngleBar);
             playGround.Controls.Add(this.missile2);
             playGround.Controls.Add(this.Tank2);
             playGround.Controls.Add(this.Tank1);
@@ -187,13 +188,13 @@ namespace WindowsFormsApplication1
             // 
             // AngleBar
             // 
-            this.AngleBar.BackColor = System.Drawing.Color.Black;
-            this.AngleBar.Location = new System.Drawing.Point(590, 591);
-            this.AngleBar.Maximum = 180;
-            this.AngleBar.Name = "AngleBar";
-            this.AngleBar.Size = new System.Drawing.Size(261, 45);
-            this.AngleBar.TabIndex = 2;
-            this.AngleBar.Scroll += new System.EventHandler(this.AngleBar_Scroll);
+            AngleBar.BackColor = System.Drawing.Color.Black;
+            AngleBar.Location = new System.Drawing.Point(590, 591);
+            AngleBar.Maximum = 180;
+            AngleBar.Name = "AngleBar";
+            AngleBar.Size = new System.Drawing.Size(261, 45);
+            AngleBar.TabIndex = 2;
+            AngleBar.Scroll += new System.EventHandler(AngleBar_Scroll);
             // 
             // missile2
             // 
@@ -219,29 +220,33 @@ namespace WindowsFormsApplication1
             // Tank1
             // 
             this.Tank1.Image = ((System.Drawing.Image)(resources.GetObject("Tank1.Image")));
-            this.Tank1.Location = new System.Drawing.Point(103, 404);
+            this.Tank1.Location = new System.Drawing.Point(112, 400);
             this.Tank1.Name = "Tank1";
             this.Tank1.Size = new System.Drawing.Size(70, 40);
             this.Tank1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.Tank1.TabIndex = 7;
             this.Tank1.TabStop = false;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1426, 665);
-            this.Controls.Add(this.PowerBarDisplay);
-            this.Controls.Add(this.PowerBar);
+            this.Controls.Add(PowerBarDisplay);
+            this.Controls.Add(PowerBar);
             this.Controls.Add(this.missile);
             this.Controls.Add(playGround);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.missile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PowerBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(PowerBar)).EndInit();
             playGround.ResumeLayout(false);
             playGround.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AngleBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(AngleBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.missile2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tank2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tank1)).EndInit();
@@ -257,11 +262,8 @@ namespace WindowsFormsApplication1
 
 
         private System.Windows.Forms.Button FireButton;
-        private System.Windows.Forms.TrackBar PowerBar;
         private System.Windows.Forms.RichTextBox PowerBarDisplay;
-        public static System.Windows.Forms.Panel playGround;
         private System.Windows.Forms.RichTextBox Angle;
-        private System.Windows.Forms.TrackBar AngleBar;
         public System.Windows.Forms.PictureBox Tank1;
         private System.Windows.Forms.PictureBox Tank2;
         private System.Windows.Forms.Button MoveLeftButton;
@@ -269,6 +271,10 @@ namespace WindowsFormsApplication1
         private System.Windows.Forms.PictureBox missile2;
         private System.Windows.Forms.RichTextBox Player2ScoreBox;
         private System.Windows.Forms.RichTextBox Player1ScoreBox;
+        private System.Windows.Forms.Timer timer1;
+        public static System.Windows.Forms.TrackBar PowerBar;
+        public static System.Windows.Forms.TrackBar AngleBar;
+        public static System.Windows.Forms.Panel playGround;
         public static System.Windows.Forms.RichTextBox WinBox;
 
     }

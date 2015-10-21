@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections.Concurrent;
 
 namespace WindowsFormsApplication1
 {
@@ -25,13 +26,17 @@ namespace WindowsFormsApplication1
             data = Encoding.ASCII.GetBytes(info);
             OutgoingStream.Write(data, 0, data.Length);
         }
+        public void Send(byte[] info)
+        {
+            OutgoingStream.Write(info, 0, info.Length);
+        }
         public void Receive()
         {
             while (true)
             {
                 byte[] data = new byte[1024];
                 int receivedDataLength = OutgoingStream.Read(data, 0, data.Length);
-                Deserializer.GetData(Encoding.ASCII.GetString(data, 0, receivedDataLength));
+                Program.commands.Enqueue(data);
             }
         }
     }

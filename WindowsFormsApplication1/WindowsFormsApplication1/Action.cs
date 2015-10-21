@@ -55,7 +55,7 @@ namespace WindowsFormsApplication1
                 Thread.Sleep(50);
             }
         }
-        public static void FireMissile(double Vx, double Vy, Player player, Player defender, Form1 test)
+        public static void FireMissile(double Vx, double Vy, Player player, Player defender)
         {
             //BFT TODO: Get rid of missileX, missileY; address position weirdness in this function
             int missileX = player.tank.Left + ((player.tank.Right - player.tank.Left) / 2);
@@ -65,7 +65,7 @@ namespace WindowsFormsApplication1
             //BFT TODO: change (Vx, Vy) to Point velocity
             for (double i = 0; i < 10; i += 0.05)
             {
-                if (!test.checkForCollision(defender.tank, player.missile))
+                if (!checkForCollision(defender.tank, player.missile))
                 {
                     player.missile.Location = new Point(missileX, missileY);
                     missileX = Convert.ToInt32(missileX + (Vx * i));
@@ -75,13 +75,26 @@ namespace WindowsFormsApplication1
                     Thread.Sleep(20);
                 }
             }
-            if (test.checkForCollision(defender.tank, player.missile))
+            if (checkForCollision(defender.tank, player.missile))
             {
                 player.AddPoint();
             }
             missileX = player.tank.Left + ((player.tank.Right - player.tank.Left) / 2);
             missileY = player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 2);
             player.missile.Location = new Point(missileX, missileY);
+        }
+        public static bool checkForCollision(PictureBox Tank, PictureBox missile)
+        {
+            bool collision;
+            if ((missile.Right >= Tank.Left) && (missile.Bottom >= Tank.Top) && (missile.Left <= Tank.Right) && (missile.Top <= Tank.Bottom))
+            {
+                collision = true;
+            }
+            else
+            {
+                collision = false;
+            }
+            return collision;
         }
     }
 }

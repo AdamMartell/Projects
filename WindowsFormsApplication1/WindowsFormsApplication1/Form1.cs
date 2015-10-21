@@ -13,9 +13,10 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        public Player player1 = new Player(1);
-        public Player player2 = new Player(2);
+        
         ConnectionHandler connection = new ConnectionHandler();
+        public static Form1 UI;
+        GameLogic game = new GameLogic();
         public Form1()
         {
             InitializeComponent();
@@ -23,13 +24,15 @@ namespace WindowsFormsApplication1
             PositionControls();
             Environment.GenerateTerrain();
             PositionTanks();
+            timer1.Enabled = true;
+            UI = this;
         }
         public void PositionControls()
         {
             this.Bounds = Screen.PrimaryScreen.Bounds;
             this.TopMost = true;
             playGround.Bounds = Screen.PrimaryScreen.Bounds;
-            player2.scoreBox.Location = new Point(playGround.Right - (player2.scoreBox.Width + 20), 10);
+            GameLogic.player2.scoreBox.Location = new Point(playGround.Right - (GameLogic.player2.scoreBox.Width + 20), 10);
             PowerBar.Top = playGround.Bottom - (playGround.Bottom / 10);
             PowerBarDisplay.Top = playGround.Bottom - (playGround.Bottom / 10);
             FireButton.Top = playGround.Bottom - (playGround.Bottom / 10);
@@ -47,89 +50,47 @@ namespace WindowsFormsApplication1
         }
         public void PlayerSetup()
         {
-            player1.isTurn = true;
-            player1.scoreBox = Player1ScoreBox;
-            player2.scoreBox = Player2ScoreBox;
-            player1.tank = Tank1;
-            player2.tank = Tank2;
-            player1.missile = missile;
-            player2.missile = missile2;
+            GameLogic.player1.isTurn = true;
+            GameLogic.player1.scoreBox = Player1ScoreBox;
+            GameLogic.player2.scoreBox = Player2ScoreBox;
+            GameLogic.player1.tank = Tank1;
+            GameLogic.player2.tank = Tank2;
+            GameLogic.player1.missile = missile;
+            GameLogic.player2.missile = missile2;
         }
 
         private void FireButton_Click(object sender, EventArgs e)
         {
-            if (player1.isTurn)
-            {
-                connection.Send("%" + ConvertPowerToX().ToString() + ConvertPowerToY().ToString());
-                Action.FireMissile(ConvertPowerToX(), ConvertPowerToY(), player1, player2, this);
-                player1.isTurn = false;
-            }
-            else
-            {
-                Action.FireMissile(ConvertPowerToX(), ConvertPowerToY(), player2, player1, this);
-                player1.isTurn = true;
-            }
+            game.Run("fire");
         }
         private void PowerBar_Scroll(object sender, EventArgs e)
         {
             PowerBarDisplay.Clear();
             PowerBarDisplay.AppendText(PowerBar.Value.ToString());
         }
-
-        public double ConvertPowerToX()
-        {
-            double x = ((Math.Cos(Convert.ToDouble(AngleBar.Value) * (Math.PI / 180.0))) * Convert.ToDouble(PowerBar.Value));
-            x = Math.Round(x, 5);
-            return x;
-        }
-        public double ConvertPowerToY()
-        {
-            double y = ((Math.Sin(Convert.ToDouble(AngleBar.Value) * (Math.PI / 180.0))) * Convert.ToDouble(PowerBar.Value));
-            y = Math.Round(y, 5);
-            return y;
-        }
-
         private void AngleBar_Scroll(object sender, EventArgs e)
         {
             Angle.Clear();
             Angle.AppendText(AngleBar.Value.ToString() + "°");
         }
-        public bool checkForCollision(PictureBox Tank, PictureBox missile)
-        {
-            bool collision;
-            if ((missile.Right >= Tank.Left) && (missile.Bottom >= Tank.Top) && (missile.Left <= Tank.Right) && (missile.Top <= Tank.Bottom))
-            {
-                collision = true;
-            }
-            else
-            {
-                collision = false;
-            }
-            return collision;
-        }
-
         private void MoveRightButton_Click(object sender, EventArgs e)
         {
-            if (player1.isTurn)
-            {
-                Action.MoveTankRight(Tank1, missile);
-            }
-            else if (!player1.isTurn)
-            {
-                Action.MoveTankRight(Tank2, missile2);
-            }
+            game.Run("moveright");
         }
 
         private void MoveLeftButton_Click(object sender, EventArgs e)
         {
-            if (player1.isTurn)
+            game.Run("moveleft");
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            byte[] result;
+            if (Program.commands.TryDequeue(out result))
             {
-                Action.MoveTankLeft(Tank1, missile);
-            }
-            else if (!player1.isTurn)
-            {
-                Action.MoveTankLeft(Tank2, missile2);
+                Deserializer.GetData(result);
             }
         }
+
     }
 }
