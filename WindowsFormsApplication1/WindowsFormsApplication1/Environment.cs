@@ -14,55 +14,47 @@ namespace WindowsFormsApplication1
     class Environment
     {
         public static List<PictureBox> TerrainSlices;
-        public static void GenerateTerrain()
+        public static void GenerateTerrain(List<int> sliceHeights)
         {
+            int x = 0;
             TerrainSlices = new List<PictureBox>() { };
-            //BFT TODO: Rename to be more descriptive (maybe combine rnd and rand?)
-            Random rnd = new Random();
-            Random rand = new Random();
-            int high = 351;
-            int low = 350;
-            int chance = rand.Next(0, 10);
-            for (int x = 0; x <= Form1.playGround.Right; x++)
+            foreach (int height in sliceHeights)
             {
-                if (x % 50 == 0)
-                {
-                    chance = rand.Next(0, 10);
-                }
-                int height = rnd.Next(low, high);
                 TerrainSlices.Add(CreateTerrainSlice(height, x, x));
-                if (chance >= 0 && chance < 2)
-                {
-                    high += 2;
-                    low += 2;
-                }
-
-                if (chance >= 2 && chance < 4)
-                {
-                    high++;
-                    low++;
-                }
-                else if (x >= 4 && x < 6)
-                {
-                    //BFT TODO: Remove sanity checks once you've confirmed that you are indeed sane
-                    high = high;
-                    low = low;
-                }
-                else if (chance > 6 && chance <= 8)
-                {
-                    high--;
-                    low--;
-                }
-                else if (chance > 8 && chance <= 10)
-                {
-                    high -= 2;
-                    low -= 2;
-                }
+                x++;
             }
+            //Random randomChance = new Random();
+            //int height = 351;
+            //int chance = randomChance.Next(0, 10);
+            //for (int x = 0; x <= UI.playGround.Right; x++)
+            //{
+            //    if (x % 50 == 0)
+            //    {
+            //        chance = randomChance.Next(0, 10);
+            //    }
+            //    TerrainSlices.Add(CreateTerrainSlice(height, x, x));
+            //    if (chance >= 0 && chance < 2)
+            //    {
+            //        height += 2;
+            //    }
+
+            //    if (chance >= 2 && chance < 4)
+            //    {
+            //        height++;
+            //    }
+            //    else if (chance > 6 && chance <= 8)
+            //    {
+            //        height--;
+            //    }
+            //    else if (chance > 8 && chance <= 10)
+            //    {
+            //        height -= 2;
+            //    }
+            //}
         }
         public static PictureBox CreateTerrainSlice(int height, int x, int y)
         {
-            y = Form1.playGround.Bottom - height;
+            y = UI.playGround.Bottom - height;
             PictureBox slice = new PictureBox
             {
                 Name = "pictureBox",
@@ -73,7 +65,7 @@ namespace WindowsFormsApplication1
             };
             slice.Height = height;
             slice.BringToFront();
-            Form1.playGround.Controls.Add(slice);
+            UI.playGround.Controls.Add(slice);
             return slice;
         }
 

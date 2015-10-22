@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace WindowsFormsApplication1
 {
-    partial class Form1
+    partial class UI
     {
         /// <summary>
         /// Required designer variable.
@@ -34,7 +34,7 @@ namespace WindowsFormsApplication1
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UI));
             this.missile = new System.Windows.Forms.PictureBox();
             this.FireButton = new System.Windows.Forms.Button();
             PowerBar = new System.Windows.Forms.TrackBar();

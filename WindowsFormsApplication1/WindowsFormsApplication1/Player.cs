@@ -15,6 +15,8 @@ namespace WindowsFormsApplication1
     {
         public bool isTurn;
         public int score;
+
+        //BFT TODO: Remove this member (the player should not know what player they are)
         public int playerNumber;
         public RichTextBox scoreBox;
         public PictureBox tank;
@@ -31,8 +33,8 @@ namespace WindowsFormsApplication1
             //BFT TODO: This code belongs in a different class that handles when the game is over, and the UI portion belongs in a different place altogether
             if (score >= 3)
             {
-                Form1.WinBox.Text = "Player " + playerNumber.ToString() + " WINS!!!!!";
-                Form1.WinBox.Show();
+                UI.WinBox.Text = "Player " + playerNumber.ToString() + " WINS!!!!!";
+                UI.WinBox.Show();
             }
             scoreBox.Clear();
             scoreBox.AppendText(score.ToString());

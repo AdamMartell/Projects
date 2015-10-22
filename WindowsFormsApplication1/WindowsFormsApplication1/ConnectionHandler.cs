@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Concurrent;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace WindowsFormsApplication1
 {
@@ -38,6 +40,17 @@ namespace WindowsFormsApplication1
                 int receivedDataLength = OutgoingStream.Read(data, 0, data.Length);
                 Program.commands.Enqueue(data);
             }
+        }
+        public List<int> SingleReceive()
+        {
+            byte[] data = new byte[16388];
+            List<int> heights = new List<int>(){};
+            int receivedDataLength = OutgoingStream.Read(data, 0, data.Length);
+            for (int x = 0; x < 16388; x += 4 )
+            {
+                heights.Add(BitConverter.ToInt32(data, x));
+            }
+            return heights;
         }
     }
 }

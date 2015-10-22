@@ -13,64 +13,43 @@ namespace WindowsFormsApplication1
 {
     static class Action
     {
-        //BFT TODO: parameter variables have first letter lowercase
-        public static void MoveTankRight(PictureBox Tank, PictureBox missile)
+        public static void MoveTankRight(PictureBox tank, PictureBox missile)
         {
-            //BFT TODO: Get rid of tankX, tankY; address position weirdness in this function
-            int tankX = Tank.Location.X;
-            int TankY = Tank.Location.Y;
             int missileX;
             int missileY;
             for (int i = 0; i < 15; i += 1)
             {
-                tankX += i;
-                Point z = new Point(tankX, Environment.TerrainSlices[Tank.Right - ((Tank.Right - Tank.Left) / 2)].Top - (Tank.Bottom - Tank.Top));
-                Tank.Location = z;
+                tank.Location = new Point(tank.Location.X + i, Environment.TerrainSlices[tank.Right - ((tank.Right - tank.Left) / 2)].Top - (tank.Bottom - tank.Top));
                 //BFT TODO: Hide missile when it's not supposed to display (don't move it along with the tank)
-                missileX = Tank.Left + ((Tank.Right - Tank.Left) / 2);
-                missileY = Tank.Top + ((Tank.Bottom - Tank.Top) / 2);
-                Point c = new Point(missileX, missileY);
-                missile.Location = c;
+                missileX = tank.Left + ((tank.Right - tank.Left) / 2);
+                missileY = tank.Top + ((tank.Bottom - tank.Top) / 2);
+                missile.Location = new Point(missileX, missileY);
                 Thread.Sleep(50);
             }
         }
-
-
-        //BFT TODO: Same comments as above
-        public static void MoveTankLeft(PictureBox Tank, PictureBox missile)
+        public static void MoveTankLeft(PictureBox tank, PictureBox missile)
         {
-            int tankX = Tank.Location.X;
-            int TankY = Tank.Location.Y;
             int missileX;
             int missileY;
             for (int i = 0; i < 15; i += 1)
             {
-                tankX -= i;
-                Point z = new Point(tankX, Environment.TerrainSlices[Tank.Right - ((Tank.Right - Tank.Left) / 2)].Top - (Tank.Bottom - Tank.Top));
-                Tank.Location = z;
-                missileX = Tank.Left + ((Tank.Right - Tank.Left) / 2);
-                missileY = Tank.Top + ((Tank.Bottom - Tank.Top) / 2);
-                Point c = new Point(missileX, missileY);
-                missile.Location = c;
+                tank.Location = new Point(tank.Location.X - i, Environment.TerrainSlices[tank.Right - ((tank.Right - tank.Left) / 2)].Top - (tank.Bottom - tank.Top));
+                missileX = tank.Left + ((tank.Right - tank.Left) / 2);
+                missileY = tank.Top + ((tank.Bottom - tank.Top) / 2);
+                missile.Location = new Point(missileX, missileY);
                 Thread.Sleep(50);
             }
         }
-        public static void FireMissile(double Vx, double Vy, Player player, Player defender)
+
+        public static void FireMissile(int angle, int power, Player player, Player defender)
         {
-            //BFT TODO: Get rid of missileX, missileY; address position weirdness in this function
-            int missileX = player.tank.Left + ((player.tank.Right - player.tank.Left) / 2);
-            int missileY = player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 2);
-            player.missile.Location = new Point(missileX, missileY);
-            player.missile.Visible = true;
-            //BFT TODO: change (Vx, Vy) to Point velocity
+            double Vx = ConvertPowerToX(angle, power);
+            double Vy = ConvertPowerToY(angle, power);
             for (double i = 0; i < 10; i += 0.05)
             {
                 if (!checkForCollision(defender.tank, player.missile))
                 {
-                    player.missile.Location = new Point(missileX, missileY);
-                    missileX = Convert.ToInt32(missileX + (Vx * i));
-                    //BFT TODO: 4.9 is a magic number
-                    missileY = Convert.ToInt32(missileY - ((Vy * i) - (4.9 * (i * i))));
+                    player.missile.Location = new Point(Convert.ToInt32(player.missile.Location.X + (Vx * i)), Convert.ToInt32(player.missile.Location.Y - ((Vy * i) - (4.9 * (i * i)))));
                     //BFT TODO: Get rid of this
                     Thread.Sleep(20);
                 }
@@ -79,22 +58,21 @@ namespace WindowsFormsApplication1
             {
                 player.AddPoint();
             }
-            missileX = player.tank.Left + ((player.tank.Right - player.tank.Left) / 2);
-            missileY = player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 2);
-            player.missile.Location = new Point(missileX, missileY);
+            player.missile.Location = new Point(player.tank.Left + ((player.tank.Right - player.tank.Left) / 2), player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 2));
         }
         public static bool checkForCollision(PictureBox Tank, PictureBox missile)
         {
-            bool collision;
-            if ((missile.Right >= Tank.Left) && (missile.Bottom >= Tank.Top) && (missile.Left <= Tank.Right) && (missile.Top <= Tank.Bottom))
-            {
-                collision = true;
-            }
-            else
-            {
-                collision = false;
-            }
-            return collision;
+            return ((missile.Right >= Tank.Left) && (missile.Bottom >= Tank.Top) && (missile.Left <= Tank.Right) && (missile.Top <= Tank.Bottom));
+        }
+        public static double ConvertPowerToX(int angle, int power)
+        {
+            double x = ((Math.Cos(Convert.ToDouble(angle) * (Math.PI / 180.0))) * Convert.ToDouble(power));
+            return x;
+        }
+        public static double ConvertPowerToY(int angle, int power)
+        {
+            double y = ((Math.Sin(Convert.ToDouble(angle) * (Math.PI / 180.0))) * Convert.ToDouble(power));
+            return y;
         }
     }
 }

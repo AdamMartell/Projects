@@ -11,21 +11,20 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    public partial class UI : Form
     {
-        
-        ConnectionHandler connection = new ConnectionHandler();
-        public static Form1 UI;
-        GameLogic game = new GameLogic();
-        public Form1()
+        ConnectionHandler connection;
+        GameLogic game;
+        public UI()
         {
             InitializeComponent();
+            connection = new ConnectionHandler();
+            game = new GameLogic();
             PlayerSetup();
             PositionControls();
-            Environment.GenerateTerrain();
+            Environment.GenerateTerrain(Program.heights);
             PositionTanks();
             timer1.Enabled = true;
-            UI = this;
         }
         public void PositionControls()
         {
@@ -43,8 +42,8 @@ namespace WindowsFormsApplication1
         }
         public void PositionTanks()
         {
-            Tank1.Location = new Point(Tank1.Right, Environment.TerrainSlices[Tank1.Right].Top - (Tank1.Bottom - Tank1.Top));
-            Tank2.Location = new Point(Tank2.Right, Environment.TerrainSlices[Tank2.Right].Top - (Tank2.Bottom - Tank2.Top));
+            Tank1.Location = new Point(Tank1.Right, Environment.TerrainSlices[Tank1.Right - ((Tank1.Right - Tank1.Left) / 2)].Top - (Tank1.Bottom - Tank1.Top));
+            Tank2.Location = new Point(Tank2.Right, Environment.TerrainSlices[Tank2.Right - ((Tank2.Right - Tank2.Left) / 2)].Top - (Tank2.Bottom - Tank2.Top));
             missile.Location = new Point(Tank1.Left + ((Tank1.Right - Tank1.Left) / 2), Tank1.Top + ((Tank1.Bottom - Tank1.Top) / 2));
             missile2.Location = new Point(Tank2.Left + ((Tank2.Right - Tank2.Left) / 2), Tank2.Top + ((Tank2.Bottom - Tank2.Top) / 2));
         }
@@ -61,7 +60,7 @@ namespace WindowsFormsApplication1
 
         private void FireButton_Click(object sender, EventArgs e)
         {
-            game.Run("fire");
+            game.DoAction("fire");
         }
         private void PowerBar_Scroll(object sender, EventArgs e)
         {
@@ -75,14 +74,15 @@ namespace WindowsFormsApplication1
         }
         private void MoveRightButton_Click(object sender, EventArgs e)
         {
-            game.Run("moveright");
+            game.DoAction("moveright");
         }
 
         private void MoveLeftButton_Click(object sender, EventArgs e)
         {
-            game.Run("moveleft");
+            game.DoAction("moveleft");
         }
 
+        //BFT TODO: This should probably be based on whose turn it is, not by ticks
         private void timer1_Tick(object sender, EventArgs e)
         {
             byte[] result;
