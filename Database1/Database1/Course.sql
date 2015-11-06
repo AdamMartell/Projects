@@ -1,0 +1,4 @@
+﻿CREATE TABLE [avm].[Course]
+(
+	[Id] INT NOT NULL PRIMARY KEY
+)

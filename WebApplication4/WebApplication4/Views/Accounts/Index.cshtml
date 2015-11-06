@@ -1,0 +1,156 @@
+﻿@using WebApplication9.Models;
+@model Tuple<List<AccountViewModel>, List<AccountViewModel1>> 
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>Geocoding service</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 100px;
+        padding: 0;
+      }
+      #map {
+        height: 500px;
+      }
+#floating-panel {
+        position: inherit;
+        top: 10px;
+        left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 10px;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script defer type="text/javascript">
+        var allAccounts = @Html.Raw(Json.Encode(Model.Item2));
+        var markers = [];
+        var map;
+        var directionsDisplay;
+        var directionsService;
+        var currentLocation;
+        function initMap() {
+                directionsService = new google.maps.DirectionsService;
+                directionsDisplay = new google.maps.DirectionsRenderer;
+                map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: { lat: 39.8282, lng: -98.5795 }
+                });
+                directionsDisplay.setMap(map);
+            var geocoder = new google.maps.Geocoder();
+            for (var i = 0; i < 15; i++) {
+                var location = allAccounts[i];
+                var address = location.BillingStreet +" "+ location.BillingCity +", "+ location.BillingState +" "+ location.BillingPostalCode;
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            animation: google.maps.Animation.DROP,
+                            title: location.Name
+                        });
+                        marker.addListener('click', function() {
+                            calculateAndDisplayRoute(directionsService, directionsDisplay, this.getPosition(), currentLocation);
+                            map.setCenter(marker.getPosition());
+                        });
+                        markers.push(marker);
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status + 'initMap');
+                    }
+                });
+            }
+        }
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, Destination, Origin) {
+            directionsService.route({
+                origin: Origin,
+                destination: Destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function(response, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+        function geocodeAddress(Location) {
+            map.setZoom(13);
+            var geocoder = new google.maps.Geocoder();
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+            var address1 = Location;
+            currentLocation = Location;
+            geocoder.geocode({ 'address': address1 }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    map.panTo(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        animation: google.maps.Animation.DROP,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+</script>
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBouzJTuxa9dCflnWWrrG8U1ti6Q96UOBc&signed_in=true&callback=initMap">
+    </script>
+
+    <h2>Accounts</h2>
+    @using (Html.BeginForm())
+    {
+        <p>
+            Title: @Html.TextBox("SearchString") <br />
+            <input type="submit" name="SearchString" value="Print" />
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Billing City
+            </th>
+            <th>
+                <p>Select</p>
+            </th>
+            @*<th></th>*@
+        </tr>
+
+        @foreach (var item in Model.Item1)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.BillingCity
+                </td>
+                <td>
+                    @Html.Raw("<input id=\"Select\" type=\"submit\" value=\"Select\" name=\"item.BillingCity\" onclick=\"geocodeAddress('" + item.BillingStreet + " " + item.BillingCity + ", " + item.BillingState + " " + item.BillingPostalCode + "')\" />")
+                </td>
+            </tr>
+        }
+
+    </table>
+</body>

@@ -1,0 +1,22 @@
+﻿<Window x:Class="WpfApplication5.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:local="clr-namespace:WpfApplication5.ViewModels"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <oxy:Plot LegendPlacement="Outside" LegendTitle="Legend" LegendBorder="Black" Title="{Binding Title}">
+            <oxy:Plot.Axes>
+                <oxy:DateTimeAxis Position="Bottom" Title="Time(in Months)" StringFormat="MMMM" IntervalType="Months"  />
+                <oxy:LinearAxis Position="Left" Title = "Cash Money" AxislineColor="Yellow" />
+            </oxy:Plot.Axes>
+            <oxy:PlotView.Series>
+                <oxy:LineSeries Color="DarkOrchid" ItemsSource="{Binding Points}" Title="Projected Profit" />
+                <oxy:LineSeries Color="Crimson" ItemsSource="{Binding Points2}"  Title="Actual Profit"  />
+            </oxy:PlotView.Series>
+        </oxy:Plot>
+    </Grid>
+</Window>

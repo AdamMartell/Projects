@@ -8,8 +8,9 @@ namespace WindowsFormsApplication1
 {
     class Serializer
     {
-        public static byte[] SerializeFire(int sentinel, int angle, int power, Player player)
+        public static byte[] SerializeFire(int angle, int power, Player player)
         {
+            int sentinel = 1;
             double serializedplayer = 0;
             double serializeddefender = 0;
             if (player == GameLogic.player1)
@@ -18,7 +19,7 @@ namespace WindowsFormsApplication1
                 serializeddefender = 2;
             }
             else if (player == GameLogic.player2)
-            { hey adam!
+            {
                 serializedplayer = 2;
                 serializeddefender = 1;
             }

@@ -13,12 +13,10 @@ namespace WindowsFormsApplication1
 {
     public partial class UI : Form
     {
-        ConnectionHandler connection;
         GameLogic game;
         public UI()
         {
             InitializeComponent();
-            connection = new ConnectionHandler();
             game = new GameLogic();
             PlayerSetup();
             PositionControls();
@@ -42,10 +40,10 @@ namespace WindowsFormsApplication1
         }
         public void PositionTanks()
         {
-            Tank1.Location = new Point(Tank1.Right, Environment.TerrainSlices[Tank1.Right - ((Tank1.Right - Tank1.Left) / 2)].Top - (Tank1.Bottom - Tank1.Top));
-            Tank2.Location = new Point(Tank2.Right, Environment.TerrainSlices[Tank2.Right - ((Tank2.Right - Tank2.Left) / 2)].Top - (Tank2.Bottom - Tank2.Top));
-            missile.Location = new Point(Tank1.Left + ((Tank1.Right - Tank1.Left) / 2), Tank1.Top + ((Tank1.Bottom - Tank1.Top) / 2));
-            missile2.Location = new Point(Tank2.Left + ((Tank2.Right - Tank2.Left) / 2), Tank2.Top + ((Tank2.Bottom - Tank2.Top) / 2));
+            Tank1.Location = new Point(Tank1.Location.X, Environment.TerrainSlices[Tank1.Right - ((Tank1.Right - Tank1.Left) / 2)].Top - (Tank1.Bottom - Tank1.Top));
+            Tank2.Location = new Point(Tank2.Location.X, Environment.TerrainSlices[Tank2.Right - ((Tank2.Right - Tank2.Left) / 2)].Top - (Tank2.Bottom - Tank2.Top));
+            missile.Location = new Point(Tank1.Left + ((Tank1.Right - Tank1.Left) / 2), Tank1.Top + ((Tank1.Bottom - Tank1.Top) / 4));
+            missile2.Location = new Point(Tank2.Left + ((Tank2.Right - Tank2.Left) / 2), Tank2.Top + ((Tank2.Bottom - Tank2.Top) / 4));
         }
         public void PlayerSetup()
         {

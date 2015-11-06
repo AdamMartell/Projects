@@ -13,6 +13,7 @@ namespace WindowsFormsApplication1
 {
     static class Action
     {
+        const double GRAVITY = 9.81;
         public static void MoveTankRight(PictureBox tank, PictureBox missile)
         {
             int missileX;
@@ -47,18 +48,19 @@ namespace WindowsFormsApplication1
             double Vy = ConvertPowerToY(angle, power);
             for (double i = 0; i < 10; i += 0.05)
             {
-                if (!checkForCollision(defender.tank, player.missile))
+                if (!checkForCollision(defender.tank, player.missile) && !checkForEnvironmentCollision(player.missile))
                 {
-                    player.missile.Location = new Point(Convert.ToInt32(player.missile.Location.X + (Vx * i)), Convert.ToInt32(player.missile.Location.Y - ((Vy * i) - (4.9 * (i * i)))));
+                    player.missile.Location = new Point(Convert.ToInt32(player.missile.Location.X + (Vx * i)), Convert.ToInt32(player.missile.Location.Y - ((Vy * i) - ((GRAVITY/2) * (i * i)))));
                     //BFT TODO: Get rid of this
                     Thread.Sleep(20);
                 }
             }
+            //Explosion(player.missile);
             if (checkForCollision(defender.tank, player.missile))
             {
                 player.AddPoint();
             }
-            player.missile.Location = new Point(player.tank.Left + ((player.tank.Right - player.tank.Left) / 2), player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 2));
+            player.missile.Location = new Point(player.tank.Left + ((player.tank.Right - player.tank.Left) / 4), player.tank.Top + ((player.tank.Bottom - player.tank.Top) / 4));
         }
         public static bool checkForCollision(PictureBox Tank, PictureBox missile)
         {
@@ -73,6 +75,43 @@ namespace WindowsFormsApplication1
         {
             double y = ((Math.Sin(Convert.ToDouble(angle) * (Math.PI / 180.0))) * Convert.ToDouble(power));
             return y;
+        }
+        public static bool checkForEnvironmentCollision(PictureBox missile)
+        {
+            try
+            {
+                return (missile.Bottom >= Environment.TerrainSlices[missile.Location.X].Top);
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+        }
+        public static void Explosion(PictureBox missile)
+        {
+            string currentImage = missile.ImageLocation;
+            for (int x = 0; x < 10; x++)
+            {
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey0.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey1.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey2.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey3.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey4.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+                missile.ImageLocation = @"C:\Users\amartell_be\Downloads\topdowntanks\PNG\Smoke\smokeGrey5.png";
+                missile.Refresh();
+                Thread.Sleep(80);
+            }
+            missile.ImageLocation = currentImage;
         }
     }
 }

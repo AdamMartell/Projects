@@ -26,13 +26,13 @@ namespace WindowsFormsApplication1
                 case "fire":
                     if (player1.isTurn)
                     {
-                        connection.Send(Serializer.SerializeFire(1, UI.AngleBar.Value, UI.PowerBar.Value, player1));
+                        connection.Send(Serializer.SerializeFire(UI.AngleBar.Value, UI.PowerBar.Value, player1));
                         player1.isTurn = false;
                         Action.FireMissile(UI.AngleBar.Value, UI.PowerBar.Value, player1, player2);                        
                     }
                     else if (!player1.isTurn)
                     {
-                        connection.Send(Serializer.SerializeFire(1, UI.AngleBar.Value, UI.PowerBar.Value, player2));
+                        connection.Send(Serializer.SerializeFire(UI.AngleBar.Value, UI.PowerBar.Value, player2));
                         player1.isTurn = true;
                         Action.FireMissile(UI.AngleBar.Value, UI.PowerBar.Value, player2, player1);                        
                     }
